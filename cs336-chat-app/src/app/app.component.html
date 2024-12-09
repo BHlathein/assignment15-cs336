@@ -1,0 +1,59 @@
+<div class="chat-container">
+  <!-- Chat header: Displays the application title -->
+  <div class="chat-header">
+    Chat Application
+  </div>
+
+  <!-- User inputs: Allows users to input their name and pick a color -->
+  <div class="user-inputs">
+    <input
+      class="username-input"
+      [(ngModel)]="userName"
+      (change)="updateUserName($event)"
+      placeholder="Your Name"
+    >
+    <input
+      type="color"
+      class="color-picker"
+      [(ngModel)]="userColor"
+      (change)="updateUserColor($event)"
+    >
+  </div>
+
+  <!-- Error message: Displays if there is an error with sending the message -->
+  @if (sendError) {
+    <div class="error-message">{{ sendError }}</div>
+  }
+
+  <!-- Messages container: Displays all messages from the Firestore -->
+  <div class="messages-container">
+    @for (message of messages$ | async; track message.id) {
+      <div class="message">
+        <div class="message-header">
+          <span class="message-username" [style.color]="message.color">
+            {{ message.userName }}
+          </span>
+          <span class="message-timestamp">
+            {{ message.timestamp | date:'medium' }}
+          </span>
+        </div>
+        <div class="message-content">
+          {{ message.message }}
+        </div>
+      </div>
+    } @empty {
+      <div class="empty-message">
+        No messages yet. Start the conversation!
+      </div>
+    }
+  </div>
+
+  <!-- Message input: Allows users to type and send messages -->
+  <div class="chat-input">
+    <input
+      [(ngModel)]="newMessage"
+      placeholder="Type a message"
+    >
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>
